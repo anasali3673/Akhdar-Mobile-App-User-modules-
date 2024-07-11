@@ -57,7 +57,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { fullName, password } = req.body;
+    const { fullName } = req.body;
 
     try {
         let user = await User.findById(id);
@@ -66,10 +66,6 @@ exports.updateUser = async (req, res) => {
         }
 
         if (fullName) user.fullName = fullName;
-        if (password) {
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(password, salt);
-        }
 
         await user.save();
         res.json({ msg: 'User updated successfully' });
