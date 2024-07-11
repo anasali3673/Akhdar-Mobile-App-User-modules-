@@ -21,17 +21,17 @@ exports.registerUser = async (req, res) => {
 
         await user.save();
 
-        res.status(201).json({ msg: 'User registered successfully' });
+        res.status(201).json({ msg: 'User registered successfully', user: { email: user.email, fullName: user.fullName, id: user._id } });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
 };
 
-exports.getUserByFullName = async (req, res) => {
-    const { fullName } = req.params;
+exports.getUserById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const user = await User.findOne({ fullName });
+        const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
@@ -56,14 +56,11 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { email, fullName, password } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ msg: 'Please provide an email' });
-    }
+    const { id } = req.params;
+    const { fullName, password } = req.body;
 
     try {
-        let user = await User.findOne({ email });
+        let user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
@@ -83,19 +80,15 @@ exports.updateUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ msg: 'Please provide an email' });
-    }
+    const { id } = req.params;
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
 
-        await User.deleteOne({ email });
+        await User.deleteOne({ _id: id });
         res.json({ msg: 'User deleted successfully' });
     } catch (err) {
         console.error(err.message);

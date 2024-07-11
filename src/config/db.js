@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/user-registration', {
+        await mongoose.connect('mongodb://localhost:27017/TASK_MANAGEMENT', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
